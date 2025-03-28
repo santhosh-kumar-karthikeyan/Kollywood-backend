@@ -1,0 +1,11 @@
+{
+  "name": "kollywood.io",
+  "version": "1.0.0",
+  "description": "Kollywood.io is a web-based io game that brings a table-top game into desktop. Play along to find out more!!!",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm start"
+  },
+  "author": "Santhosh Kumar K",
+  "license": "ISC"
+}
