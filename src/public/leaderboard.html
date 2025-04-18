@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard | Kollywood.io</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+25&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/357bed2f3f.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./css/output.css">
+</head>
+<body class="bg-gray-900 text-white font-[Poppins]">
+
+    <!-- Navigation -->
+    <header class="fixed top-0 left-0 w-full bg-gray-800 shadow-md z-50">
+        <nav class="max-w-7xl mx-auto flex justify-between items-center px-8 py-4">
+            <h1 class="text-2xl font-extrabold text-yellow-400">
+                <a href="http://localhost:5000/" aria-label="Kollywood.io Home">Kollywood.io</a>
+            </h1>
+            <ul class="flex gap-6">
+                <li><a href="http://localhost:5000/rules" class="text-gray-300 hover:text-yellow-400 transition">How to Play?</a></li>
+                <li><a href="http://localhost:5000/support" class="text-gray-300 hover:text-yellow-400 transition">Support</a></li>
+                <li><a href="http://localhost:5000/tac" class="text-gray-300 hover:text-yellow-400 transition">TAC</a></li>
+                <li><a href="http://localhost:5000/login" class="text-gray-300 hover:text-yellow-400 transition">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex flex-col items-center justify-center min-h-screen px-4 pt-24">
+        <section class="bg-gray-800 p-8 rounded-xl shadow-lg text-center w-full max-w-5xl">
+            <h2 class="text-3xl font-extrabold text-yellow-400">Leaderboard</h2>
+
+            <!-- Top Controls -->
+            <div class="flex flex-col md:flex-row justify-between items-center mt-6 gap-4">
+                <!-- Sort Dropdown -->
+                <div class="flex items-center gap-2">
+                    <label for="sort-box" class="text-gray-300">Sort by:</label>
+                    <select id="sort-box" class="bg-gray-700 text-white p-2 rounded-md focus:ring-2 focus:ring-yellow-400 cursor-pointer">
+                        <option value="rank">Rank</option>
+                        <option value="name">Name</option>
+                    </select>
+                </div>
+
+                <!-- Search Bar -->
+                <form action="" name="search-box" class="flex items-center bg-gray-700 p-2 rounded-md w-full md:w-1/3">
+                    <input type="text" placeholder="Search for a player" class="bg-transparent text-white focus:outline-none flex-grow px-2">
+                    <button type="submit" class="text-yellow-400">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Leaderboard Table (Visible on Desktop) -->
+            <div class="hidden md:block mt-6 overflow-x-auto">
+                <table class="w-full border-collapse border border-gray-600">
+                    <thead class="bg-gray-700">
+                        <tr>
+                            <th class="p-3 border border-gray-600">Rank</th>
+                            <th class="p-3 border border-gray-600">Player Name</th>
+                            <th class="p-3 border border-gray-600">Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-gray-800 hover:bg-gray-700 transition">
+                            <td class="p-3 border border-gray-600">1</td>
+                            <td class="p-3 border border-gray-600">s4ndy</td>
+                            <td class="p-3 border border-gray-600">1000</td>
+                        </tr>
+                        <tr class="bg-gray-900 hover:bg-gray-700 transition">
+                            <td class="p-3 border border-gray-600">2</td>
+                            <td class="p-3 border border-gray-600">GhostRider</td>
+                            <td class="p-3 border border-gray-600">750</td>
+                        </tr>
+                        <!-- More rows here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Mobile Leaderboard (Cards) -->
+            <div class="md:hidden mt-6 space-y-4">
+                <div class="bg-gray-700 p-4 rounded-md flex justify-between">
+                    <div>
+                        <p class="text-yellow-400 font-bold">#1</p>
+                        <p class="text-lg">s4ndy</p>
+                    </div>
+                    <p class="text-xl font-semibold">1000</p>
+                </div>
+                <div class="bg-gray-700 p-4 rounded-md flex justify-between">
+                    <div>
+                        <p class="text-yellow-400 font-bold">#2</p>
+                        <p class="text-lg">GhostRider</p>
+                    </div>
+                    <p class="text-xl font-semibold">750</p>
+                </div>
+                <!-- More cards here -->
+            </div>
+
+            <!-- Pagination & Row Selection -->
+            <div class="flex justify-between items-center mt-6">
+                <select id="row-count" class="bg-gray-700 text-white p-2 rounded-md focus:ring-2 focus:ring-yellow-400 cursor-pointer">
+                    <option value="10">10/page</option>
+                    <option value="50">50/page</option>
+                    <option value="100">100/page</option>
+                    <option value="all">View all</option>
+                </select>
+                <div class="flex gap-2">
+                    <button class="bg-yellow-400 text-black px-3 py-1 rounded-md hover:bg-yellow-500 transition">1</button>
+                    <button class="bg-gray-700 px-3 py-1 rounded-md text-white">2</button>
+                    <p class="text-gray-400">...</p>
+                    <button class="bg-gray-700 px-3 py-1 rounded-md text-white">50</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.getElementById("row-count").addEventListener("change", function(evt) {
+            console.log(`Selected: ${evt.target.value}`);
+        });
+    </script>
+</body>
+</html>

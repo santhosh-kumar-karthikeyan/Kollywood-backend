@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Kollywood.io</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+25&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/357bed2f3f.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./css/output.css">
+</head>
+<style>
+    #invalid-message {
+        display: none;
+        color: red;
+    }
+</style>
+<body class="bg-gray-900 text-white font-[Poppins]">
+
+    <!-- Navigation -->
+    <header class="fixed top-0 left-0 w-full bg-gray-800 shadow-md z-50">
+        <nav class="max-w-7xl mx-auto flex justify-between items-center px-8 py-4">
+            <h1 class="text-2xl font-extrabold text-yellow-400">
+                <a href="#" aria-label="Kollywood.io Home">Kollywood.io</a>
+            </h1>
+            <ul class="flex gap-6">
+                <li><a href="http://localhost:5000/leaderboard" class="text-gray-300 hover:text-yellow-400 transition">Leaderboard</a></li>
+                <li><a href="http://localhost:5000/support" class="text-gray-300 hover:text-yellow-400 transition">Support</a></li>
+                <li><a href="http://localhost:5000/tac" class="text-gray-300 hover:text-yellow-400 transition">TAC</a></li>
+                <li>
+                    <a href="http://localhost:5000/signUp" id="SignUp"
+                        class="bg-yellow-400 text-black px-4 py-1 rounded-md hover:bg-yellow-500 transition">
+                        Sign Up
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex flex-col items-center justify-center min-h-screen px-4 pt-24">
+        <div class="flex flex-col items-center">
+            <!-- Login Box -->
+            <section class="bg-gray-800 p-8 rounded-xl shadow-lg text-center w-full max-w-sm">
+                <h2 class="text-2xl font-bold text-yellow-400">Sign in to Kollywood.io</h2>
+
+                <form class="mt-6 space-y-4">
+                    <!-- Username -->
+                    <div>
+                        <input id="username" type="text" name="username" placeholder="Enter your username"
+                            class="w-full p-3 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <input id="password" type="password" name="password" placeholder="Enter your password"
+                            class="w-full p-3 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                    </div>
+
+                    <!-- Error Message -->
+                    <p id="invalid-message" class="text-red-500 text-sm hidden">
+                        <i class="fa-solid fa-circle-xmark "></i> Invalid username or password
+                    </p>
+
+                    <!-- Submit Button -->
+                    <button id="submit-button" type="submit"
+                        class="w-full bg-yellow-400 text-black py-2 rounded-md cursor-pointer hover:bg-yellow-500 transition">
+                        Login
+                    </button>
+
+                    <!-- Sign Up Link -->
+                    <p class="text-sm text-gray-300">
+                        New user? <a href="http://localhost:5000/signUp" class="text-yellow-400 hover:underline">Register here</a>
+                    </p>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        const submitButton = document.getElementById("submit-button");
+        const usernameBox = document.getElementById("username");
+        const passwordBox = document.getElementById("password");
+        const message = document.getElementById("invalid-message");
+
+        submitButton.addEventListener("click", evt => {
+            evt.preventDefault();
+            if (usernameBox.value !== "" && passwordBox.value !== "") {
+                fetch("http://localhost:5000/validateLogin", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username: usernameBox.value, password: passwordBox.value })
+                }).then(res => res.json())
+                .then(data => {
+                    if (data.validity && data.userFound) {
+                        window.location.href = "http://localhost:5000/";
+                    } else {
+                        message.classList.remove("hidden");
+                        message.style.display = 'block';
+                    }
+                }).catch(err => console.error("Error!!!"));
+            }
+        });
+    </script>
+</body>
+</html>
