@@ -9,50 +9,64 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Jersey+25&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/357bed2f3f.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./css/output.css">
 </head>
 <body class="bg-gray-900 text-white font-[Poppins]">
-    
+
     <!-- Navigation -->
-    <header class="bg-gray-800 shadow-md">
-        <nav class="max-w-5xl mx-auto flex justify-between items-center p-5">
+    <header class="fixed top-0 left-0 w-full bg-gray-800 shadow-md z-50">
+        <nav class="max-w-7xl mx-auto flex justify-between items-center px-8 py-4">
+            <!-- Logo -->
             <h1 class="text-2xl font-extrabold text-yellow-400">
                 <a href="#" aria-label="Kollywood.io Home">Kollywood.io</a>
             </h1>
-            <ul class="flex gap-5">
+
+            <!-- Navigation Links -->
+            <ul class="flex gap-10">
                 <li><a href="http://localhost:5000/leaderboard" class="text-gray-300 hover:text-yellow-400 transition">Leaderboard</a></li>
-                <li><a href="tac.html" class="text-gray-300 hover:text-yellow-400 transition">TAC</a></li>
+                <li><a href="http://localhost:5000/rules" class="text-gray-300 hover:text-yellow-400 transition">How To Play?</a></li>
                 <li><a href="http://localhost:5000/tac" class="text-gray-300 hover:text-yellow-400 transition">Contact</a></li>
                 <li><a href="login.html" id="Login" class="text-gray-300 hover:text-yellow-400 transition">Login</a></li>
-                <li><a href="http://localhost:5000/signUp" id="SignUp" class="bg-yellow-400 text-black px-4 py-1 rounded-md hover:bg-yellow-500 transition">Sign Up</a></li>
+                <li>
+                    <a href="http://localhost:5000/signUp" id="SignUp"
+                        class="bg-yellow-400 text-black px-4 py-1 rounded-md hover:bg-yellow-500 transition">
+                        Sign Up
+                    </a>
+                </li>
             </ul>
         </nav>
     </header>
 
-    <!-- Main Content -->
-    <main class="flex flex-col items-center justify-center min-h-screen px-4">
+    <!-- Main Content (Adjusted to avoid overlap with fixed navbar) -->
+    <main class="flex flex-col items-center justify-center min-h-screen px-4 pt-20">
         <section class="bg-gray-800 p-10 rounded-xl shadow-lg text-center w-full max-w-md">
             <h2 class="text-3xl font-extrabold text-yellow-400 tracking-wide">Kollywood.io</h2>
 
-            <form class="mt-6 space-y-4">
+            <form class="mt-6 space-y-4" action="http://localhost:5000/matchUp">
                 <!-- Input field -->
                 <div>
                     <label for="movie-input" class="sr-only">Enter Movie Hint</label>
-                    <input id="movie-input" type="text" placeholder="This is the tale of" class="w-full p-2 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                    <input id="movie-input" type="text" placeholder="This is the tale of"
+                        class="w-full p-2 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400">
                 </div>
 
                 <!-- Profile Selector -->
                 <div class="flex items-center justify-center gap-4">
-                    <button type="button" id="arrow-left" class="text-2xl cursor-pointer hover:text-yellow-400 transition" aria-label="Previous Profile Picture">
+                    <button type="button" id="arrow-left"
+                        class="text-2xl cursor-pointer hover:text-yellow-400 transition" aria-label="Previous Profile Picture">
                         <i class="fa-solid fa-circle-chevron-left"></i>
                     </button>
-                    <img id="prof" class="w-20 h-20 rounded-full border-4 border-yellow-400" src="../resources/profile_images/img1.jpg" alt="Profile Picture">
-                    <button type="button" id="arrow-right" class="text-2xl cursor-pointer hover:text-yellow-400 transition" aria-label="Next Profile Picture">
+                    <img id="prof" class="w-20 h-20 rounded-full border-4 border-yellow-400"
+                        src="./images/profile_images/img1.jpg" alt="Profile Picture">
+                    <button type="button" id="arrow-right"
+                        class="text-2xl cursor-pointer hover:text-yellow-400 transition" aria-label="Next Profile Picture">
                         <i class="fa-solid fa-circle-chevron-right"></i>
                     </button>
                 </div>
 
                 <!-- Play Button -->
-                <button type="submit" class="w-full bg-yellow-400 text-black py-2 rounded-md cursor-pointer hover:bg-yellow-500 transition">
+                <button type="submit"
+                    class="w-full bg-yellow-400 text-black py-2 rounded-md cursor-pointer hover:bg-yellow-500 transition">
                     Play Now!
                 </button>
             </form>

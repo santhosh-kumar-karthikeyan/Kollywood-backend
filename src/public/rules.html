@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Play | Kollywood.io</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+25&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/357bed2f3f.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./css/output.css">
+    <style>
+        /* Custom Pop-up Animation */
+        .clue-popup {
+            position: absolute;
+            background-color: #1f1f1f;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        /* Popup Positions */
+        .popup-top-left { top: -35px; left: -60px; }
+        .popup-top-right { top: -35px; right: -60px; }
+        .popup-bottom-left { bottom: -35px; left: -60px; }
+        .popup-bottom-right { bottom: -35px; right: -60px; }
+    </style>
+</head>
+<body class="bg-gray-900 text-white font-[Poppins]">
+
+    <!-- Navigation -->
+    <header class="fixed top-0 left-0 w-full bg-gray-800 shadow-md z-50">
+        <nav class="max-w-7xl mx-auto flex justify-between items-center px-8 py-4">
+            <h1 class="text-2xl font-extrabold text-yellow-400">
+                <a href="index.html" aria-label="Kollywood.io Home">Kollywood.io</a>
+            </h1>
+            <ul class="flex gap-6">
+                <li><a href="leaderboard.html" class="text-gray-300 hover:text-yellow-400 transition">Leaderboard</a></li>
+                <li><a href="support.html" class="text-gray-300 hover:text-yellow-400 transition">Support</a></li>
+                <li><a href="tac.html" class="text-gray-300 hover:text-yellow-400 transition">TAC</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Player's KOLLYWOOD Chances -->
+    <div class="flex justify-center items-center mt-24 space-x-4">
+        <h2 class="text-4xl font-bold text-red-500 tracking-wide" id="player-kollywood">KOLLYWOOD</h2>
+        <span class="text-lg font-semibold text-gray-400">Chances Left: <span id="player-chances">8</span></span>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex flex-col items-center justify-center min-h-screen px-4 pt-6">
+        <section class="bg-gray-800 p-8 rounded-xl shadow-lg text-center w-full max-w-6xl">
+            <h2 class="text-3xl font-extrabold text-yellow-400">How to Play</h2>
+
+            <!-- Game Layout -->
+            <div class="flex flex-col md:flex-row gap-6 mt-6">
+
+                <!-- Left Panel: Game Rules -->
+                <div class="w-full md:w-1/4 bg-gray-700 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-yellow-400">Game Rules</h3>
+                    <ul class="mt-4 text-left text-gray-300 space-y-2">
+                        <li>🔹 Two players compete in a **1v1 match**.</li>
+                        <li>🔹 You will be given **four clues** to identify the movie.</li>
+                        <li>🔹 Click on any clue to type your answer.</li>
+                        <li>🔹 Each player gets **8 chances** (one per letter in KOLLYWOOD).</li>
+                        <li>🔹 **Wrong guesses remove a letter** from KOLLYWOOD.</li>
+                        <li>🔹 First player to guess correctly wins!</li>
+                    </ul>
+                </div>
+
+                <!-- Center Panel: Interactive Clues -->
+                <div class="w-full md:w-2/4 bg-gray-900 p-6 rounded-lg shadow-md flex flex-col items-center">
+                    <h3 class="text-lg font-semibold text-yellow-400 mb-4">Game Interface</h3>
+                    
+                    <!-- Clue Tiles -->
+                    <div class="grid grid-cols-2 gap-4 w-3/4">
+                        <div class="relative">
+                            <div class="clue-tile bg-yellow-400 text-black p-4 text-center rounded-md font-bold cursor-pointer hover:bg-yellow-500 transition" data-clue="Clue 1">
+                                🎬
+                            </div>
+                            <div class="clue-popup popup-top-left">Movie Genre</div>
+                        </div>
+                        <div class="relative">
+                            <div class="clue-tile bg-yellow-400 text-black p-4 text-center rounded-md font-bold cursor-pointer hover:bg-yellow-500 transition" data-clue="Clue 2">
+                                🏆
+                            </div>
+                            <div class="clue-popup popup-top-right">Awards Won</div>
+                        </div>
+                        <div class="relative">
+                            <div class="clue-tile bg-yellow-400 text-black p-4 text-center rounded-md font-bold cursor-pointer hover:bg-yellow-500 transition" data-clue="Clue 3">
+                                🌍
+                            </div>
+                            <div class="clue-popup popup-bottom-left">Movie Location</div>
+                        </div>
+                        <div class="relative">
+                            <div class="clue-tile bg-yellow-400 text-black p-4 text-center rounded-md font-bold cursor-pointer hover:bg-yellow-500 transition" data-clue="Clue 4">
+                                🎶
+                            </div>
+                            <div class="clue-popup popup-bottom-right">Famous Song</div>
+                        </div>
+                    </div>
+
+                    <!-- Answer Input Fields -->
+                    <div class="mt-4 w-3/4">
+                        <input type="text" id="answer-box" placeholder="Click a clue to answer..." class="p-2 w-full text-black text-center font-semibold rounded-md focus:ring-2 focus:ring-yellow-400" disabled>
+                    </div>
+                </div>
+
+                <!-- Right Panel: Opponent Status -->
+                <div class="w-full md:w-1/4 bg-gray-700 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-yellow-400">Opponent Status</h3>
+                    <div class="mt-4 flex flex-col items-center text-gray-300">
+                        <p class="text-lg">Opponent: **Ajay**</p>
+                        <div class="bg-red-500 text-white px-4 py-1 rounded-md mt-2">
+                            Guessing... <br>
+                            <span class="text-yellow-300 font-bold" id="opponent-kollywood">KOLLYWOOD</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>

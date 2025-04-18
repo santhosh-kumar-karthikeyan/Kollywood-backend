@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | Kollywood.io</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+25&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/357bed2f3f.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./css/output.css">
+</head>
+<body class="bg-gray-900 text-white font-[Poppins]">
+
+    <!-- Navigation -->
+    <header class="fixed top-0 left-0 w-full bg-gray-800 shadow-md z-50">
+        <nav class="max-w-7xl mx-auto flex justify-between items-center px-8 py-4">
+            <h1 class="text-2xl font-extrabold text-yellow-400">
+                <a href="index.html" aria-label="Kollywood.io Home">Kollywood.io</a>
+            </h1>
+            <ul class="flex gap-6">
+                <li><a href="http://localhost:5000/leaderboard" class="text-gray-300 hover:text-yellow-400 transition">Leaderboard</a></li>
+                <li><a href="http://localhost:5000/support" class="text-gray-300 hover:text-yellow-400 transition">Support</a></li>
+                <li><a href="http://localhost:5000/tac" class="text-gray-300 hover:text-yellow-400 transition">TAC</a></li>
+                <li>
+                    <a href="http://localhost:5000/login" id="SignUp"
+                        class="bg-yellow-400 text-black px-4 py-1 rounded-md hover:bg-yellow-500 transition">
+                        Login
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex flex-col items-center justify-center min-h-screen px-4 pt-24">
+        <section class="bg-gray-800 p-8 rounded-xl shadow-lg text-center w-full max-w-md">
+            <h2 class="text-2xl font-bold text-yellow-400">Create an Account</h2>
+
+            <form action="http://localhost:5000/validateSignup" method="POST" class="mt-6 space-y-4">
+                <!-- Username -->
+                <div>
+                    <input id="user-name" type="text" name="username" placeholder="Enter your username"
+                        class="w-full p-3 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                    <p id="user-message" class="text-red-500 text-sm hidden mt-1"></p>
+                </div>
+                <!-- Email Input with Domain Selection -->
+                <div class="w-full">
+                    <div class="flex bg-gray-700 p-2 rounded-lg items-center">
+                        <input type="text" id="email-primary" name="email" placeholder="Your email"
+                            class="w-2/3 bg-transparent text-white placeholder-gray-400 focus:outline-none p-2">
+                        
+                        <span id="alias-tag" class="text-gray-300 px-2">@</span>
+
+                        <div class="relative w-1/3">
+                            <select id="email-domain" name="domain"
+                                class="appearance-none bg-gray-800 text-white p-2 pr-6 rounded-md focus:outline-none cursor-pointer w-full border border-gray-600">
+                                <option value="gmail.com">gmail.com</option>
+                                <option value="outlook.com">outlook.com</option>
+                                <option value="mepcoeng.ac.in">mepcoeng.ac.in</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                            <button id = "reset-btn" class="hidden">Reset</button>
+                            <i id="drop-down" class="fa-solid fa-chevron-down text-gray-400 absolute right-2 top-3 text-sm pointer-events-none"></i>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!-- Password -->
+                <div>
+                    <input id="pass-1" type="password" name="pass1" placeholder="Enter your password"
+                        class="w-full p-3 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                    <p id="pass-validator" class="text-red-500 text-sm hidden mt-1"></p>
+                </div>
+
+                <!-- Password Confirmation -->
+                <div>
+                    <input id="pass-2" type="password" name="pass2" placeholder="Confirm your password"
+                        class="w-full p-3 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                    <p id="pass-message" class="text-red-500 text-sm hidden mt-1"></p>
+                </div>
+
+                <!-- Register Button -->
+                <button id="reg" type="submit" disabled
+                    class="w-full bg-yellow-400 text-black py-2 rounded-md cursor-pointer hover:bg-yellow-500 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                    Register
+                </button>
+
+                <!-- Login Link -->
+                <p class="text-sm text-gray-300">
+                    Already a user? <a href="http://localhost:5000/login" class="text-yellow-400 hover:underline">Login here</a>
+                </p>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        const text_box = document.getElementById("email-primary");
+        const domain_box = document.getElementById("email-domain");
+        domain_box.selectedIndex = '0';
+        const tag = document.getElementById("tag");
+        const reset_btn = document.getElementById("reset-btn");
+        const outer_box = document.getElementById('email-div');
+        const drop_down = document.getElementById('drop-down');
+        const aliasTag = document.getElementById('alias-tag');
+        domain_box.addEventListener("change",function(evt) {
+            if(evt.target.value == 'custom') {
+                reset_btn.classList = domain_box.classList;
+                domain_box.classList.add("hidden");
+                drop_down.classList.add("hidden");
+                aliasTag.classList.add("hidden");
+            }
+        });
+        reset_btn.addEventListener("click",function(evt){
+            evt.preventDefault();
+            domain_box.classList = reset_btn.classList;
+            reset_btn.classList.add("hidden");
+            drop_down.classList.remove("hidden");
+            domain_box.selectedIndex = '0';
+            aliasTag.classList.remove("hidden");
+        });
+        // Username Validation
+        const userBox = document.getElementById("user-name");
+        const userMessage = document.getElementById("user-message");
+        const submitButton = document.getElementById("reg");
+        userBox.addEventListener("focusout",(evt)=> {
+            userMessage.classList.add("hidden");
+        });
+        userBox.addEventListener("input", (evt) => {
+            if (evt.target.value.length < 4) {
+                userMessage.classList.remove("hidden");
+                userMessage.innerHTML = "<i class='fa-solid fa-circle-xmark'></i> Username must be at least 4 characters.";
+                userMessage.style.color = 'red';
+                submitButton.disabled = true;
+            } else {
+                fetch("http://localhost:5000/checkUsername", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username: userBox.value }),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        userMessage.classList.remove("hidden");
+                        if (data.exists) {
+                            submitButton.disabled = true;
+                            userMessage.innerHTML = "<i class='fa-solid fa-circle-xmark'></i> Username already exists.";
+                            userMessage.style.color = 'red';
+                        } else {
+                            submitButton.disabled = false;
+                            userMessage.innerHTML = "<i class='fa-solid fa-circle-check'></i> Username available.";
+                            userMessage.style.color = 'green';
+                        }
+                    })
+                    .catch((err) => console.error("Error fetching username validity"));
+            }
+        });
+
+        // Password Validation
+        const pass1Box = document.getElementById("pass-1");
+        const pass2Box = document.getElementById("pass-2");
+        const passValidator = document.getElementById("pass-validator");
+        const passMessage = document.getElementById("pass-message");
+        const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+
+        pass1Box.addEventListener("input", (evt) => {
+            if (passwordRegex.test(evt.target.value)) {
+                passValidator.classList.add("hidden");
+            } else {
+                passValidator.classList.remove("hidden");
+                passValidator.innerHTML = "Password must be 8+ chars with a number, special char, and uppercase letter.";
+            }
+        });
+
+        pass2Box.addEventListener("input", (evt) => {
+            if (evt.target.value !== pass1Box.value) {
+                passMessage.classList.remove("hidden");
+                passMessage.innerHTML = "<i class='fa-solid fa-circle-xmark'></i> Passwords do not match.";
+                submitButton.disabled = true;
+            } else {
+                passMessage.classList.add("hidden");
+                submitButton.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

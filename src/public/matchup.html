@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kollywood.io - Matchmaking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="/socket.io/socket.io.js"></script>
+    <script defer src="../scripts/matchup.js"></script>
+    <link rel="stylesheet" href="./css/output.css">
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-900 text-white">
+    <div class="bg-gray-800 p-8 rounded-xl shadow-xl text-center w-96">
+        <!-- Game Title -->
+        <h1 class="text-3xl font-extrabold text-yellow-400 tracking-wide">Kollywood.io</h1>
+        <p class="mt-2 text-lg text-gray-300">Waiting for an opponent...</p>
+
+        <!-- Loading animation -->
+        <div class="mt-6 flex justify-center">
+            <div class="w-8 h-8 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+
+        <!-- Waiting status -->
+        <p id="status" class="mt-4 text-gray-400">Searching for players...</p>
+
+        <!-- Fun message -->
+        <p class="mt-2 text-sm text-gray-500 italic">Get ready to indulge in the world of Kollywood!!🎬</p>
+    </div>
+</body>
+</html>
