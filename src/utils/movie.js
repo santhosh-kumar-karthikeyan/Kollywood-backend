@@ -33,13 +33,11 @@ async function fetchMovie() {
         console.error(error);
     }      
     const movieSelected = MovieList[Math.floor(Math.random() * MovieCount)];
-    const movie_id = movieSelected.id;
-    const movieName = movieSelected.title;
     return movieSelected; // .id for id , .title for title
 }
 
-async function fetchCrew(movieId) {
-    const crewFetchURL = `https://api.themoviedb.org/3/movie/${movieId}/credits`;
+async function fetchCast(movie_id) {
+    const crewFetchURL = `https://api.themoviedb.org/3/movie/${movie_id}/credits`;
     const crewOptions = {
         headers: {
             accept: 'application/json',
@@ -52,33 +50,27 @@ async function fetchCrew(movieId) {
     let crew;
     try {
         const response = await axios.get(crewFetchURL,crewOptions);
-        crew = response.data.crew;
+        crew = response.data.cast;
     }
     catch(error) {
         console.error(error);
     }
-    if(!crew) {
-        return { status : 404, message: "crew not found"};
-    }
-
-
-
+    return crew;
 }
 
+async function fetchHeroAndHeroine(crew) {
+    const actors = crew.filter((member) => member.known_for_department === "Acting").slice(0,2);
+    console.log(actors);
+    console.log(actors.length);
+}
 
 async function getRandomMovie() {
-    
-
-    console.log(movie_id);
-    console.log(movieName);
-    // let crew;
-    // try {
-    //     const response = await axios.get(crewFetchURL,crewOptions );
-    //     crew = response.data.crew;
-    //     console.log(crew);
-    // } 
-    // catch(error) {
-    //     console.error(error);
-    // }
+    const movie = await fetchMovie();
+    const movieId = movie.id;
+    const movieTitle = movie.title;
+    const crew = await fetchCast(movieId);
+    // const { hero, heroine } = 
+    console.log(movieId);
+    fetchHeroAndHeroine(crew);
 }
 getRandomMovie();
