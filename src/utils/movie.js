@@ -58,19 +58,31 @@ async function fetchCast(movie_id) {
     return crew;
 }
 
-async function fetchHeroAndHeroine(crew) {
-    const actors = crew.filter((member) => member.known_for_department === "Acting").slice(0,2);
-    console.log(actors);
-    console.log(actors.length);
+async function fetchHeroAndHeroine(cast) {
+    const actors = cast.filter((member) => member.known_for_department === "Acting").slice(0,10);
+    let hero = null, heroine = null;
+    let count = 0;
+    while(!hero && !heroine || count <= 10) {
+        if(!hero && actors[count].gender === 2)
+            hero = actors[count]
+        if(!heroine && actors[count].gender === 1)
+            heroine = actors[count]
+        count++;
+    }
+    return {hero,heroine};
 }
 
 async function getRandomMovie() {
     const movie = await fetchMovie();
     const movieId = movie.id;
     const movieTitle = movie.title;
-    const crew = await fetchCast(movieId);
-    // const { hero, heroine } = 
+    console.log(movieTitle);
+    const cast = await fetchCast(movieId);
     console.log(movieId);
-    fetchHeroAndHeroine(crew);
+    fetchHeroAndHeroine(cast);
+    const { hero, heroine } = await fetchHeroAndHeroine(cast);
+    console.log(hero);
+    console.log(heroine);
+    
 }
 getRandomMovie();
