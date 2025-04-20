@@ -1,5 +1,5 @@
 const { Schema } = require("mongoose");
 
-const movieSchema = new Schema({
-    movieName: 
+const movie = new Schema({
+    
 });
