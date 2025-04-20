@@ -69,20 +69,19 @@ async function fetchHeroAndHeroine(cast) {
             heroine = actors[count]
         count++;
     }
-    return {hero,heroine};
+    return {hero,heroine,};
 }
 
 async function getRandomMovie() {
     const movie = await fetchMovie();
     const movieId = movie.id;
     const movieTitle = movie.title;
-    console.log(movieTitle);
     const cast = await fetchCast(movieId);
-    console.log(movieId);
-    fetchHeroAndHeroine(cast);
     const { hero, heroine } = await fetchHeroAndHeroine(cast);
-    console.log(hero);
-    console.log(heroine);
-    
+    const heroName = hero.name;
+    const heroineName = heroine.name;
+    return { movieId, movieTitle, heroName, heroineName };
 }
+
 getRandomMovie();
+module.exports = { getRandomMovie };
