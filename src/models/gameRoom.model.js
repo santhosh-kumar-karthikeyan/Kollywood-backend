@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require("../utils/db");
 const gameRoomSchema = new Schema({
         code: {
             type: String,
