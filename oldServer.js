@@ -17,9 +17,7 @@ exports.users = users;
 let sessions;
 // let loggedIn = false;
 // let userId = "";
-// async function nextGameId() {
-//     let newGameId = 0;
-//     const highestGameId = await sessions.find().sort({gameId: -1}).limit(1).toArray();
+
 //     if(highestGameId) 
 //         newGameId = highestGameId + 1;
 //     return newGameId;
