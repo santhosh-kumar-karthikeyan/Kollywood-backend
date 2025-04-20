@@ -6,7 +6,7 @@ dotenv.config({path: path.resolve("../../.env")});
 const clientId = process.env.SPOTIFY_CLIENT_ID.trim();
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET.trim();
 
-async function getAccessToken() {
+async function getSpotifyAccessToken() {
     const response = await axios.post(
         'https://accounts.spotify.com/api/token',
         new URLSearchParams({
@@ -36,12 +36,15 @@ async function getSongName(movieTitle, accessToken) {
     });
     if(response.data.tracks.items.length > 0) {
         const tracks = response.data.tracks.items;
+        console.log(tracks[0]);
         return tracks[0].name;
     }
 }
 
-(async () => {
-    const accessToken = await getAccessToken();
-    const trackName = await getSongName("Kamali from Nadukkaveri",accessToken);
-    console.log(trackName);
-})();
+// (async () => {
+//     const accessToken = await getSpotifyAccessToken();
+//     const trackName = await getSongName("Kannum Kannum Kollaiyadithaal",accessToken);
+//     console.log(trackName);
+// })();
+
+module.exports = { getSpotifyAccessToken, getSongName}
