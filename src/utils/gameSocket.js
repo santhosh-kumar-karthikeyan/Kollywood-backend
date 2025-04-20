@@ -6,7 +6,7 @@ async function generateRoomId() {
     return nextCode;
 }
 
-module.exports = (io) => {
+function manageGameSocket(io) {
     io.on("connection", (socket) => {
         console.log(`New socket connected: ${socket.id}`);
         socket.on("createRoom",async ({playerName} , callback) => {
@@ -32,7 +32,7 @@ module.exports = (io) => {
             if(!room || room.players.length >= 2) {
                 callback({
                     success: false,
-                    message: "Room full";
+                    message: "Room full"
                 });
             }
             room.players.push({
@@ -49,3 +49,5 @@ module.exports = (io) => {
         });
     })
 };
+
+module.exports = manageGameSocket;
