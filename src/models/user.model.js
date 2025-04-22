@@ -16,6 +16,10 @@ const userSchema = new mongoose.Schema({
     role: {
         type: String,
         required: true
+    },
+    totalScore: {
+        type: Number,
+        default: 0
     }
 });
 
