@@ -1,5 +1,5 @@
-const mongoose = require("../utils/db");
-const gameRoomSchema = new Schema({
+const mongoose = require("mongoose");
+const gameRoomSchema = new mongoose.Schema({
         code: {
             type: String,
             required: true,

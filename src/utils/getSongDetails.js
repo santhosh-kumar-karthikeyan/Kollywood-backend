@@ -1,10 +1,9 @@
 const axios = require("axios");
 const path = require("path");
 const dotenv = require("dotenv");
-const { access } = require("fs");
 dotenv.config({path: path.resolve("../../.env")});
-const clientId = process.env.SPOTIFY_CLIENT_ID.trim();
-const clientSecret = process.env.SPOTIFY_CLIENT_SECRET.trim();
+const clientId = process.env.SPOTIFY_CLIENT_ID;
+const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 
 async function getSpotifyAccessToken() {
     const response = await axios.post(
@@ -36,14 +35,13 @@ async function getSongName(movieTitle, accessToken) {
     });
     if(response.data.tracks.items.length > 0) {
         const tracks = response.data.tracks.items;
-        console.log(tracks[0]);
         return tracks[0].name;
     }
 }
 
 // (async () => {
 //     const accessToken = await getSpotifyAccessToken();
-//     const trackName = await getSongName("Kannum Kannum Kollaiyadithaal",accessToken);
+//     const trackName = await getSongName("Remo",accessToken);
 //     console.log(trackName);
 // })();
 
