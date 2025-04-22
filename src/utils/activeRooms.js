@@ -1,0 +1,30 @@
+const { Clue } = require("../models/clue.class");
+
+const activeRooms = {};
+
+async function createRoom(roomCode, socketId) {
+    const newClue = new Clue();
+    await newClue.populateClue();
+    activeRooms[roomCode] = {
+            players: [socketId],
+            clue: newClue,
+            winner: null
+    }
+}
+
+function addPlayerToRoom(roomCode,socketId) {
+    if(activeRooms[roomCode])
+        activeRooms[roomCode].players.push(socketId);
+    else
+        return { error: 'roomCode not found'};
+}
+
+function getRoom(roomCode) {
+    return activeRooms[roomCode];
+}
+
+function isInRoom(roomCode, socketId) {
+    return activeRooms[roomCode].players.some(player => player === socketId);
+}
+
+module.exports = { activeRooms, createRoom, addPlayerToRoom, getRoom, isInRoom };

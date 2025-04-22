@@ -4,7 +4,7 @@ const dotenv = require("dotenv")
 dotenv.config({
     path: path.resolve('../../.env')
 });
-const TMDB_API_KEY = process.env.TMDB_API_KEY.trim();
+const TMDB_API_KEY = process.env.TMDB_API_KEY;
 
 async function fetchMovie() {
     const randomPage = Math.floor(Math.random() * 10) + 1;
@@ -83,5 +83,4 @@ async function getRandomMovie() {
     return { movieId, movieTitle, heroName, heroineName };
 }
 
-getRandomMovie();
 module.exports = { getRandomMovie };
