@@ -50,7 +50,7 @@ exports.validateLogin = async (req,res) => {
     }
 }
 
-exports.validateSignup = async (req,res) => {
+exports.addUser = async (req,res) => {
     console.log("Entered into website with post request");
     const { username, email, domain, pass1} = req.body;
     let new_email = email;

@@ -1,6 +1,7 @@
 const express = require("express");
 const staticRoutes = require("./routes/staticRoutes");
 const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
 const path = require("path");
 const cors = require("cors");
 const { mongoose, connectKollywood} = require("./utils/db");
@@ -23,6 +24,7 @@ app.use(express.static(path.join(__dirname,"./public")));
 //routes
 app.use("/",staticRoutes);
 app.use("/auth",authRoutes);
+app.use("/user",userRoutes);
 
 //gameSocket server
 manageGameSocket(io);
