@@ -1,5 +1,10 @@
 const argon = require("argon2");
 const User = require("../models/user.model");
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+const path = require("path");
+dotenv.config(path.resolve("../../.env"));
+const secretKey = process.env.JWT_SECRET_KET;
 
 exports.checkUsername = async (req, res) => {
   console.log("checking username");
@@ -30,7 +35,15 @@ exports.validateLogin = async (req, res) => {
       try {
         if (await argon.verify(foundUser.passwordHash, password)) {
           console.log("Correct password!!");
-          return res.status(200).json({ message: "correct password" });
+          const token = jwt.sign(
+            {
+              username: foundUser.username,
+              email: foundUser.email,
+            },
+            secretKey,
+            { expiresIn: "1h" }
+          );
+          return res.status(200).json({ token, message: "correct password" });
         } else console.log("Incorrect password!!");
         return res.status(400).json({ message: "incorrect password" });
       } catch (err) {
@@ -63,7 +76,14 @@ exports.addUser = async (req, res) => {
   });
   await newUser.save();
   console.log("User added");
-  return res.status(200).json({ message: "User added" });
+  const token = jwt.sign({
+    username: newUser.username,
+    email : newUser.email
+    },
+    secretKey,
+    { expiresIn : "1h"}
+  );
+  return res.status(200).json({ token, message: "User added" });
 };
 
 exports.changePassword = async (req, res) => {
