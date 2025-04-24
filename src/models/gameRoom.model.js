@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const gameRoomSchema = new mongoose.Schema({
-        code: {
+        roomcode: {
             type: String,
             required: true,
             unique: true
@@ -8,12 +8,20 @@ const gameRoomSchema = new mongoose.Schema({
         players: [
             {
                 socketId: String,
-                name: String
+                name: String,
+                score : {
+                    type: Number,
+                    default : 0,
+                }
             }
         ],
         isGameStarted: {
             type: Boolean,
             default: false
+        },
+        winner : {
+            type: Number,
+            default : 0
         }
     },
     {
