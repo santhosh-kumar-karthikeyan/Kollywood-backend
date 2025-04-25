@@ -59,14 +59,14 @@ exports.validateLogin = async (req, res) => {
 
 exports.addUser = async (req, res) => {
   console.log("Entered into website with post request");
-  const { username, email, domain, pass1 } = req.body;
+  const { username, email, domain, password } = req.body;
   let new_email = email;
   if (domain !== "custom") {
     new_email += "@" + domain;
   }
   console.log(username);
   console.log(req.body);
-  const hash = await argon.hash(pass1);
+  const hash = await argon.hash(password);
   const newUser = new User({
     username,
     email: new_email,
@@ -86,30 +86,3 @@ exports.addUser = async (req, res) => {
   return res.status(200).json({ token, message: "User added" });
 };
 
-exports.changePassword = async (req, res) => {
-  const { username, oldPass, newPass } = req.body;
-  console.log(`Requested password change for: ${username}`);
-  const userFound = await User.findOne({ username });
-  if (!userFound) return res.status(404).json({ message: "user not found" });
-  const oldHash = userFound.passwordHash;
-  console.log(oldHash);
-  console.log(typeof oldHash);
-  console.log(oldPass);
-  console.log(typeof oldPass);
-  const validity = await argon.verify(oldHash, oldPass);
-  if (!validity) {
-    console.log("Incorrect old password");
-    return res.status(400).json({ message: "incorrect old password" });
-  }
-  //old password has been validated, time to update new password
-  console.log("Correct old password. Changing password...");
-  try {
-    userFound.passwordHash = await argon.hash(newPass);
-    await userFound.save();
-    console.log("Password changed");
-    return res.status(200).json({ message: "password updated" });
-  } catch (error) {
-    console.error(error);
-    res.status(400).json({ message: "hashing error" });
-  }
-};
