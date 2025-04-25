@@ -28,17 +28,20 @@ const io = socketIO(server);
 connectKollywood();
 
 //middleware configuration
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:4200',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+    credentials: true 
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname,"./public")));
-app.use("/api",jwtAuth);
 
 // route configuration
 app.use("/",staticRoutes);
 app.use("/auth",authRoutes);
-app.use("/user",userRoutes);
-app.use("/game",gameRoutes);
+app.use("/user",jwtAuth,userRoutes);
+app.use("/game",jwtAuth,gameRoutes);
 
 //gameSocket server configuration
 manageGameSocket(io);
