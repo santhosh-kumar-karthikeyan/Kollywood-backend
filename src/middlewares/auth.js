@@ -1,18 +1,20 @@
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const path = require("path");
-dotenv.config({ path : path.resolve("../../.env")});
+dotenv.config();
 
 const secretKey = process.env.JWT_SECRET_KEY;
 
 exports.jwtAuth = (req,res,next) => {
-    const token = req.header('x-auth-token');
-    if(!token) {
-        return res.status(401).json({ message: "no token, access denied"});
+    const authHeader = req.headers['authorization'];
+    if(!authHeader || !authHeader.startsWith("Bearer")) {
+        return res.status(400).json({ message: "Invalid token"});
     }
     try {
+        const token = authHeader.split(' ')[1];
         const decoded = jwt.verify(token,secretKey);
-        req.user = decoded.user;
+        req.username = decoded.username;
+        console.log(decoded.user);
         next();
     }
     catch(err) {

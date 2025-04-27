@@ -1,14 +1,16 @@
-const { Clue } = require("../models/clue.class");
+const Clue = require("../models/clue.class");
 
 const activeRooms = {};
 
 async function createRoom(roomCode, socketId) {
-    const newClue = new Clue();
-    await newClue.populateClue();
+    const movie = new Clue();
+    await movie.populateClue();
     activeRooms[roomCode] = {
             players: [socketId],
-            clue: newClue,
-            winner: null
+            remainingGuesses: [9,9],
+            movie: movie,
+            clue: movie.dispatchObscureClue(),
+            winner: 0
     }
 }
 
@@ -27,4 +29,4 @@ function isInRoom(roomCode, socketId) {
     return activeRooms[roomCode].players.some(player => player === socketId);
 }
 
-module.exports = { activeRooms, createRoom, addPlayerToRoom, getRoom, isInRoom };
+module.exports = { activeRooms, createRoom, addPlayerToRoom, getRoom, isInRoom};

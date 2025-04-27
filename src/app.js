@@ -22,17 +22,19 @@ const manageGameSocket = require("./utils/manageGameSocket");
 const app = express()
 const http = require("http");
 const server = http.createServer(app);
-const io = socketIO(server);
+const io = socketIO(server, {
+    cors: {
+        origin: 'http://localhost:4200',
+        methods: ['GET', 'POST'],
+        credentials: true
+    }
+});
 
 //database configuration
 connectKollywood();
 
 //middleware configuration
-app.use(cors({
-    origin: 'http://localhost:4200',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
-    credentials: true 
-}));
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname,"./public")));

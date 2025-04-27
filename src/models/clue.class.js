@@ -2,35 +2,19 @@ const { getRandomMovie } = require("../utils/getMovieDetails");
 const { getSpotifyAccessToken, getSongName } = require("../utils/getSongDetails");
 
 module.exports = class Clue {
-    movieName = "";
-    heroName = "";
-    heroineName = "";
-    songName = "";
+    values = [];
+    constructor() {}
     async populateClue() {
-        const {movieId, movieTitle, heroName, heroineName } = await getRandomMovie();
+        const {movieTitle, heroName, heroineName } = await getRandomMovie();
         const spotifyAccessToken = await getSpotifyAccessToken();
         const songName = await getSongName(movieTitle, spotifyAccessToken);
-        this.movieName = movieTitle;
-        this.heroName = heroName;
-        this.heroineName = heroineName;
-        this.songName = songName;
+        this.values.push(movieTitle).push(heroName).push(heroineName).push(songName);
     }
     
     verifyClue(guess) {
-        return {
-            field1 : this.movieTitle === guess.movieTitle,
-            field2 : this.heroName === guess.heroName,
-            field3: this.heroineName === guess.heroineName,
-            field4 : this.songName === guess.songName,
-            allTrue : field1 === field2 === field3 === field4
-        }
+        return [this.movieName === guess.movieName,this.heroName === guess.heroName,this.heroineName === guess.heroineName,this.songName === guess.songName ]
     }
     dispatchObscureClue() {
-        return new clue(
-            this.movieTitle[0],
-            this.heroName[0],
-            this.heroineName[0],
-            this.songName[0]
-        );
+        return [this.values[0][0],this.values[1][0],this.values[2][0],this.values[3][0]];
     }
 }
