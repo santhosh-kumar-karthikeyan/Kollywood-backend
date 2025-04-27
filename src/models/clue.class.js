@@ -8,7 +8,10 @@ module.exports = class Clue {
         const {movieTitle, heroName, heroineName } = await getRandomMovie();
         const spotifyAccessToken = await getSpotifyAccessToken();
         const songName = await getSongName(movieTitle, spotifyAccessToken);
-        this.values.push(movieTitle).push(heroName).push(heroineName).push(songName);
+        this.values.push(movieTitle);
+        this.values.push(heroName);
+        this.values.push(heroineName);
+        this.values.push(songName);
     }
     
     verifyClue(guess) {
