@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const path = require("path");
 dotenv.config(path.resolve("../../.env"));
-const secretKey = process.env.JWT_SECRET_KET;
+const secretKey = process.env.JWT_SECRET_KEY;
 
 exports.checkUsername = async (req, res) => {
   console.log("checking username");

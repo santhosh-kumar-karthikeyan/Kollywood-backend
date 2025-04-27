@@ -26,10 +26,13 @@ async function fetchMovie() {
     let MovieList;
     let MovieCount = 20;
     try {
-        const response = await axios.get(movieFetchURL, movieOptions);
-        MovieList = response.data.results;
-        MovieCount = response.data.results.length;
+        for(let i = 0; i < 3 && MovieList == undefined; i++) {
+            const response = await axios.get(movieFetchURL, movieOptions);
+            MovieList = response.data.results;
+            MovieCount = response.data.results.length;
+        }
     } catch (error) {
+        console.log("error");
         console.error(error);
     }      
     const movieSelected = MovieList[Math.floor(Math.random() * MovieCount)];

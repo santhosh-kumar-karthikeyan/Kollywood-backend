@@ -1,4 +1,16 @@
 const GameRoom = require("../models/gameRoom.model");
+const { activeRooms } = require("../utils/activeRooms");
+
+exports.getRoomCodeToJoin = async(req,res) => {
+  console.log("Checking for free rooms...");
+  const rooms = Object.entries(activeRooms).find(([roomCode,room]) => {
+    return room.players.length === 1 && room.winner === 0
+  });
+  if(!rooms)
+    return res.status(200).json({roomCode: null});
+  console.log("Room: "+rooms[0]);
+  return res.status(200).json({roomCode: rooms[0]});
+}
 
 exports.getMatchDetails = async (req, res) => {
   const { roomCode } = req.query;
