@@ -23,7 +23,8 @@ const http = require("http");
 const server = http.createServer(app);
 const allowedOrigins = [
     'http://localhost:4200',
-    'https://frontend-kollywood-io.onrender.com'
+    'https://frontend-kollywood-io.onrender.com',
+    'https://kollywood.netlify.app/'
 ]
 const io = socketIO(server, {
     cors: {
@@ -33,7 +34,9 @@ const io = socketIO(server, {
             else
                 callback(new Error("Not allowed by CORS"));
         },
+        // allowedOrigins: allowedOrigins,
         methods: ['GET', 'POST'],
+        allowedHeaders: ['Content-Type','Authorization'],
         credentials: true
     }
 });
@@ -49,7 +52,9 @@ app.use(cors({
         else
             callback(new Error("Not allowed by CORS"));
     },
+    // allowedOrigins: allowedOrigins,
     methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type','Authorization'],
     credentials: true
 }));
 app.use(express.json());
