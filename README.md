@@ -141,8 +141,3 @@ Kollywood.io is a web-based multiplayer game inspired by table-top games. This b
 | `TMDB_API_KEY`        | TMDB API key for fetching movie details |
 
 ---
-
-## **License**
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
