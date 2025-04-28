@@ -40,11 +40,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname,"./public")));
 
 // route configuration
-app.use("/",staticRoutes);
+// app.use("/",staticRoutes);
 app.use("/auth",authRoutes);
 app.use("/user",jwtAuth,userRoutes);
 app.use("/game",jwtAuth,gameRoutes);
-
 //gameSocket server configuration
 manageGameSocket(io);
 
