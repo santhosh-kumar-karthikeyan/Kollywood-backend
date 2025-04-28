@@ -4,10 +4,12 @@ const { activeRooms } = require("../utils/activeRooms");
 exports.getRoomCodeToJoin = async(req,res) => {
   console.log("Checking for free rooms...");
   const rooms = Object.entries(activeRooms).find(([roomCode,room]) => {
-    return room.players.length === 1 && room.winner === 0
+    return room?.players?.length === 1 && room.winner === null
   });
-  if(!rooms)
+  if(!rooms) {
+    console.log("No free rooms found. Sending notification to create a room");
     return res.status(200).json({roomCode: null});
+  }
   console.log("Room: "+rooms[0]);
   return res.status(200).json({roomCode: rooms[0]});
 }

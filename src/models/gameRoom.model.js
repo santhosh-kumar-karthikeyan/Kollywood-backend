@@ -5,7 +5,7 @@ const gameRoomSchema = new mongoose.Schema({
     players: { type: [String], required: true },
     remainingGuesses: { type: [Number], default: [9, 9] },
     found: { type: [Number], default: [0, 0] },
-    winner: { type: string | null, default: null },
+    winner: { type:String, default: null },
 });
 
 module.exports = mongoose.model("GameRoom", gameRoomSchema);
