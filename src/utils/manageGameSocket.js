@@ -7,10 +7,10 @@ async function generateRoomId() {
     const { humanId } = await import("human-id");
     while (!isUnique) {
         roomCode = humanId({ separator: "-", capitalize: false });
-        console.log(roomCode);
         const existingRoom = await GameRoom.findOne({ roomcode: roomCode });
         if (!existingRoom) isUnique = true;
     }
+    console.log("Found room code: " + roomCode);
     return roomCode;
 }
 
@@ -23,9 +23,9 @@ function manageGameSocket(io) {
             try {
                 const roomCode = await generateRoomId();
                 console.log(`Room created with code: ${roomCode}`);
-
                 // Create in-memory room
                 await createRoom(roomCode, playerName);
+                console.log(activeRooms);
 
                 // Save room to database
                 const newRoom = new GameRoom({
@@ -49,7 +49,7 @@ function manageGameSocket(io) {
         socket.on("joinRoom", async ({ playerName, roomCode }, callback) => {
             const room = activeRooms[roomCode];
             console.log(`Join room called with roomCode: ${roomCode}`);
-            if (!room || room.players.length > 2 || room.winner === null) {
+            if (!room || room.players.length > 2 || room.winner !== null) {
                 console.log("Room full or does not exist");
                 return callback({ success: false, message: "Room full or does not exist" });
             }
@@ -78,9 +78,12 @@ function manageGameSocket(io) {
         });
 
         // Get movie clue
-        socket.on("getMovie", async ({ roomCode }, callback) => {
-            if (isInRoom(roomCode, socket.id) && !activeRooms[roomCode].winner) {
+        socket.on("getMovie", async ({ roomCode,playerName }, callback) => {
+            console.log("Handle stuck in finding in room");
+            console.log(playerName);
+            if (isInRoom(roomCode, playerName) && !activeRooms[roomCode].winner) {
                 const clueToSend = activeRooms[roomCode].clue;
+                console.log("Clue being sent: " + clueToSend);
                 callback(clueToSend);
             }
         });
@@ -92,7 +95,7 @@ function manageGameSocket(io) {
 
             const currentPlayerIndex = room.players.findIndex((player) => player.name === guess.playerName);
             if (currentPlayerIndex === -1) return;
-
+            const oppPlayerIndex = currentPlayerIndex === 0 ? 1 : 0;
             const currentMovie = room.movie;
             if (currentMovie.values[guess.index] === guess.value) {
                 room.found[currentPlayerIndex]++;
@@ -100,13 +103,24 @@ function manageGameSocket(io) {
                     room.winner = guess.playerName;
 
                     // Update database
-                    await GameRoom.updateOne({ roomcode: roomCode }, { winner: guess.playerName });
+                    await GameRoom.updateOne({ roomcode: roomCode }, { winner: guess.playerName ,                    remainingGuesses: room.remainingGuesses,
+                        found: room.found});
+                    io.to(roomCode).emit("gameStatus" , {
+                        wonBy: guess.playerName,
+                        lostBy: activeRooms[roomCode].players[oppPlayerIndex]
+                    })
                     return callback({ correctness: true, won: true, lost: false, myFound: room.found[currentPlayerIndex], oppFound : room.found[oppPlayerIndex], myRemaining: room.remainingGuesses[currentPlayerIndex], oppRemaining: room.remainingGuesses[oppPlayerIndex]});
                 }
                 callback({ correctness: true, won: false, lost: false, myFound: room.found[currentPlayerIndex], oppFound : room.found[oppPlayerIndex], myRemaining: room.remainingGuesses[currentPlayerIndex], oppRemaining: room.remainingGuesses[oppPlayerIndex]});
             } else {
                 room.remainingGuesses[currentPlayerIndex]--;
                 if (room.remainingGuesses[currentPlayerIndex] === 0) {
+                    io.to(roomCode).emit("gameStatus", {
+                        wonBy: activeRooms[roomCode].players[oppPlayerIndex],
+                        lostBy: guess.playerName
+                    });
+                    await GameRoom.updateOne({roomCode: roomCode}, {winner: activeRooms[roomCode].players[oppPlayerIndex], remainingGuesses: room.remainingGuesses,
+                        found: room.found});
                     return callback({ correctness: false, won: false, lost: true, myFound: room.found[currentPlayerIndex], oppFound : room.found[oppPlayerIndex], myRemaining: room.remainingGuesses[currentPlayerIndex], oppRemaining: room.remainingGuesses[oppPlayerIndex]});
                 }
                 callback({ correctness: false, won: false, lost: false, myFound: room.found[currentPlayerIndex], oppFound : room.found[oppPlayerIndex], myRemaining: room.remainingGuesses[currentPlayerIndex], oppRemaining: room.remainingGuesses[oppPlayerIndex]});
@@ -126,8 +140,15 @@ function manageGameSocket(io) {
             console.log(`Invalidating room ${roomCode} as ${playerName} left`);
             const currentPlayerIndex = activeRooms[roomCode].players.indexOf(playerName);
             const oppPlayerIndex = currentPlayerIndex === 0 ? 1 : 0;
-
-
+            const oppName = activeRooms[roomCode].players[oppPlayerIndex];
+            activeRooms.winner = oppName;
+            await GameRoom.updateOne({roomCode: roomCode}, {winner: oppName});
+            callback({ opponent: oppName});
+            io.to(roomCode).emit("gameStatus",{
+                wonBy: oppName,
+                lostBy: playerName
+            });
+            console.log(`${oppName} won`);
         });
         // Handle disconnection
         socket.on("disconnect", async (reason) => {
