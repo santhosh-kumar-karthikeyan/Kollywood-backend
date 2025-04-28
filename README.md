@@ -104,18 +104,6 @@ Kollywood.io is a web-based multiplayer game inspired by table-top games. This b
 
 ---
 
-### **Static Routes**
-| Method | Endpoint         | Description                     |
-|--------|------------------|---------------------------------|
-| `GET`  | `/`              | Serve the home page            |
-| `GET`  | `/login`         | Serve the login page           |
-| `GET`  | `/signUp`        | Serve the sign-up page         |
-| `GET`  | `/leaderboard`   | Serve the leaderboard page     |
-| `GET`  | `/rules`         | Serve the rules page           |
-| `GET`  | `/matchUp`       | Serve the matchmaking page     |
-
----
-
 ## **WebSocket Events**
 
 ### **Client-to-Server Events**
