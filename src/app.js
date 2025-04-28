@@ -24,16 +24,17 @@ const server = http.createServer(app);
 const allowedOrigins = [
     'http://localhost:4200',
     'https://frontend-kollywood-io.onrender.com',
-    'https://kollywood.netlify.app/'
+    ''
 ]
 const io = socketIO(server, {
     cors: {
-        origin: function(origin, callback) {
-            if(!origin || allowedOrigins.includes(origin))
-                callback(null,true);
-            else
-                callback(new Error("Not allowed by CORS"));
-        },
+    //     origin: function(origin, callback) {
+    //         if(!origin || allowedOrigins.includes(origin))
+    //             callback(null,true);
+    //         else
+    //             callback(new Error("Not allowed by CORS"));
+    //     },
+        origin: "https://kollywood.netflify.app",
         // allowedOrigins: allowedOrigins,
         methods: ['GET', 'POST'],
         allowedHeaders: ['Content-Type','Authorization'],
@@ -46,12 +47,13 @@ connectKollywood();
 
 //middleware configuration
 app.use(cors({
-    origin: function(origin, callback) {
-        if(!origin || allowedOrigins.includes(origin))
-            callback(null,true);
-        else
-            callback(new Error("Not allowed by CORS"));
-    },
+    // origin: function(origin, callback) {
+    //     if(!origin || allowedOrigins.includes(origin))
+    //         callback(null,true);
+    //     else
+    //         callback(new Error("Not allowed by CORS"));
+    // },
+    origin: "https://kollywood.netflify.app",
     // allowedOrigins: allowedOrigins,
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type','Authorization'],
