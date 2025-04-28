@@ -9,7 +9,6 @@ const socketIO = require("socket.io");
 const { jwtAuth } = require("./middlewares/auth");
 
 // importing routes
-const staticRoutes = require("./routes/staticRoutes");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const gameRoutes = require("./routes/gameRoutes");
@@ -22,9 +21,18 @@ const manageGameSocket = require("./utils/manageGameSocket");
 const app = express()
 const http = require("http");
 const server = http.createServer(app);
+const allowedOrigins = [
+    'http://localhost:4200',
+    'https://frontend-kollywood-io.onrender.com'
+]
 const io = socketIO(server, {
     cors: {
-        origin: 'http://localhost:4200',
+        origin: function(origin, callback) {
+            if(!origin || allowedOrigins.includes(origin))
+                callback(null,true);
+            else
+                callback(new Error("Not allowed by CORS"));
+        },
         methods: ['GET', 'POST'],
         credentials: true
     }
@@ -34,7 +42,16 @@ const io = socketIO(server, {
 connectKollywood();
 
 //middleware configuration
-app.use(cors());
+app.use(cors({
+    origin: function(origin, callback) {
+        if(!origin || allowedOrigins.includes(origin))
+            callback(null,true);
+        else
+            callback(new Error("Not allowed by CORS"));
+    },
+    methods: ['GET', 'POST'],
+    credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname,"./public")));
