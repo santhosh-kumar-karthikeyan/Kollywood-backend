@@ -37,6 +37,12 @@ Kollywood.io is a web-based multiplayer game inspired by table-top games. This b
 
 ---
 
+## **APIs Used**
+- **Movie database:** [The Movie Data Base (TMDB)](https://developer.themoviedb.org/reference/intro/getting-started)
+- **Song database:** [Spotify Web API for developers](https://developer.spotify.com/documentation/web-api)
+
+---
+
 ## **Setup Instructions**
 
 1. Clone the repository:
