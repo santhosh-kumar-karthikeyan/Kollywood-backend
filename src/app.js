@@ -53,7 +53,7 @@ app.use(cors({
     //     else
     //         callback(new Error("Not allowed by CORS"));
     // },
-    origin: "https://kollywood.netflify.app",
+    origin: "https://kollywood.netlify.app",
     // allowedOrigins: allowedOrigins,
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type','Authorization'],
