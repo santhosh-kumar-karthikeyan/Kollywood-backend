@@ -2,12 +2,23 @@ const User = require("../models/user.model");
 
 exports.getUser = async (req, res) => {
   const { username } = req.query;
-  console.log(`Searching for ${username}`);
-  const userFound = await User.findOne({ username: username });
+  console.log(`Searching for ${username}`); 
+  const userFound = await User.findOne({ username: username }).select('-passwordHash');
   console.log("user found");
   if (!userFound) return res.status(404).json({ message: "user not found" });
   return res.json(userFound);
 };
+
+exports.getUsers = async(req,res) => {
+  console.log("Access requested to display all users..");
+  if(req.role === "Admin") {
+    const users = await User.find().select('-passwordHash');
+    return res.status(200).json(users);
+  }
+  else {
+    return res.status(300).json({message: 'Elevation required'});
+  }
+}
 
 exports.getScore = async (req, res) => {
   const { username } = req.query;

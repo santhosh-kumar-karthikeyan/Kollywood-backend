@@ -34,7 +34,9 @@ const io = socketIO(server, {
     //         else
     //             callback(new Error("Not allowed by CORS"));
     //     },
-        origin: "https://kollywood.netlify.app",
+        // origin: "https://kollywood.netlify.app",
+        // origin: "http://localhost:4200",
+        origin: true,
         // allowedOrigins: allowedOrigins,
         methods: ['GET', 'POST'],
         allowedHeaders: ['Content-Type','Authorization'],
@@ -53,7 +55,8 @@ app.use(cors({
     //     else
     //         callback(new Error("Not allowed by CORS"));
     // },
-    origin: "https://kollywood.netlify.app",
+    // origin: "https://kollywood.netlify.app",
+    origin: true,
     // allowedOrigins: allowedOrigins,
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type','Authorization'],

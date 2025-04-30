@@ -39,6 +39,7 @@ exports.validateLogin = async (req, res) => {
             {
               username: foundUser.username,
               email: foundUser.email,
+              role: foundUser.role
             },
             secretKey,
             { expiresIn: "1h" }
@@ -78,7 +79,8 @@ exports.addUser = async (req, res) => {
   console.log("User added");
   const token = jwt.sign({
     username: newUser.username,
-    email : newUser.email
+    email : newUser.email,
+    role: newUser.role
     },
     secretKey,
     { expiresIn : "1h"}
