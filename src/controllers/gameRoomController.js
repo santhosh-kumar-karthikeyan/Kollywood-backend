@@ -24,19 +24,23 @@ exports.getMatchDetails = async (req, res) => {
 
 exports.getUserHistory = async (req, res) => {
   const { username } = req.query;
-  const rooms = await GameRoom.find({ "winner" : { $ne : 0} });
+  const rooms = await GameRoom.find();
   if (!rooms)
     return res.status(404).json({ message: "User hasn't played yet" });
-  const roomsWithPlayer = rooms.filter(room => room.players.some(player => player.name === username)); 
+  console.log(rooms);
+  const roomsWithPlayer = rooms.filter(room => room.players.some(player => player === username)); 
+  console.log(roomsWithPlayer)
   const history = roomsWithPlayer.map(room => {
-    const player = room.players.find(player => player.name === username );
-    const opponent = room.players.find(player => player.name !== username);
+    const playerIndex = room.players.indexOf(username);
+    const player = room.players.find(player => player === username );
+    const opponent = room.players.find(player => player !== username);
     return {
-      "player" : player.name || username,
-      "playerScore" : player.score || 0,
-      "opponent" : opponent.name || "Unknown",
-      "oppponentScore" : opponent.score || 0,
-      "winner" : room.winner !== 0 ? room.players[room.winner - 1].name : "Unknown"
+      "player" : player || "Unknown",
+      "playerScore" : room.score[playerIndex] || 0,
+      "opponent" : opponent || "Unknown",
+      "oppponentScore" : room.score[!playerIndex] || 0,
+      "winner" : room.winner ? room.winner : "Unknown",
+      "time" : room.createdAt || Date.now()
     }
   });
   return res.status(200).json(history);

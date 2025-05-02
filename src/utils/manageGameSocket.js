@@ -1,5 +1,7 @@
 const GameRoom = require("../models/gameRoom.model");
 const { createRoom, addPlayerToRoom, activeRooms, isInRoom } = require("./activeRooms");
+const jwt = require("jsonwebtoken");
+const secretKey = process.env.JWT_SECRET_KEY;
 
 async function generateRoomId() {
     let roomCode;
@@ -16,8 +18,13 @@ async function generateRoomId() {
 
 function manageGameSocket(io) {
     io.on("connection", (socket) => {
+        const token = socket.handshake.auth?.token;
+        if(!token)
+            console.log("No token");
+        const decoded = jwt.verify(token,secretKey);
+        socket.user = decoded;
         console.log(`New socket connected: ${socket.id}`);
-
+        console.log(`New user connected: ${socket.user.username}`);
         // Create a new room
         socket.on("createRoom", async ({ playerName }, callback) => {
             try {
@@ -84,57 +91,131 @@ function manageGameSocket(io) {
             if (isInRoom(roomCode, playerName) && !activeRooms[roomCode].winner) {
                 const clueToSend = activeRooms[roomCode].clue;
                 console.log("Clue being sent: " + clueToSend);
+                console.log("movie: ",activeRooms[roomCode].movie);
                 callback(clueToSend);
             }
         });
 
         // Submit a guess
         socket.on("submitGuess", async ({ roomCode, guess }, callback) => {
+            const playerName = socket.user.username;
             const room = activeRooms[roomCode];
             if (!room || room.winner !== null) return;
-
-            const currentPlayerIndex = room.players.findIndex((player) => player.name === guess.playerName);
+        
+            const currentPlayerIndex = room.players.indexOf(playerName);
             if (currentPlayerIndex === -1) return;
+        
             const oppPlayerIndex = currentPlayerIndex === 0 ? 1 : 0;
+            const opponentName = room.players[oppPlayerIndex];
             const currentMovie = room.movie;
+        
             if (currentMovie.values[guess.index] === guess.value) {
                 room.found[currentPlayerIndex]++;
                 if (room.found[currentPlayerIndex] === 4) {
-                    room.winner = guess.playerName;
-
+                    room.winner = playerName;
+        
                     // Update database
-                    await GameRoom.updateOne({ roomcode: roomCode }, { winner: guess.playerName ,                    remainingGuesses: room.remainingGuesses,
-                        found: room.found});
-                    io.to(roomCode).emit("gameStatus" , {
-                        wonBy: guess.playerName,
-                        lostBy: activeRooms[roomCode].players[oppPlayerIndex]
-                    })
-                    return callback({ correctness: true, won: true, lost: false, myFound: room.found[currentPlayerIndex], oppFound : room.found[oppPlayerIndex], myRemaining: room.remainingGuesses[currentPlayerIndex], oppRemaining: room.remainingGuesses[oppPlayerIndex]});
+                    await GameRoom.updateOne(
+                        { roomcode: roomCode },
+                        {
+                            winner: playerName,
+                            remainingGuesses: room.remainingGuesses,
+                            found: room.found,
+                        }
+                    );
+        
+                    // Emit game status to all players
+                    io.to(roomCode).emit("gameStatus", {
+                        [playerName]: {
+                            found: room.found[currentPlayerIndex],
+                            remainingGuesses: room.remainingGuesses[currentPlayerIndex],
+                            won: true,
+                            lost: false,
+                        },
+                        [opponentName]: {
+                            found: room.found[oppPlayerIndex],
+                            remainingGuesses: room.remainingGuesses[oppPlayerIndex],
+                            won: false,
+                            lost: true,
+                        },
+                    });
+        
+                    // Return correctness in the callback
+                    return callback({ correctness: true });
                 }
-                callback({ correctness: true, won: false, lost: false, myFound: room.found[currentPlayerIndex], oppFound : room.found[oppPlayerIndex], myRemaining: room.remainingGuesses[currentPlayerIndex], oppRemaining: room.remainingGuesses[oppPlayerIndex]});
+        
+                // Emit updated game state to all players
+                io.to(roomCode).emit("gameStatus", {
+                    [playerName]: {
+                        found: room.found[currentPlayerIndex],
+                        remainingGuesses: room.remainingGuesses[currentPlayerIndex],
+                        won: false,
+                        lost: false,
+                    },
+                    [opponentName]: {
+                        found: room.found[oppPlayerIndex],
+                        remainingGuesses: room.remainingGuesses[oppPlayerIndex],
+                        won: false,
+                        lost: false,
+                    },
+                });
+        
+                // Return correctness in the callback
+                return callback({ correctness: true });
             } else {
                 room.remainingGuesses[currentPlayerIndex]--;
                 if (room.remainingGuesses[currentPlayerIndex] === 0) {
+                    room.winner = opponentName;
+        
+                    // Update database
+                    await GameRoom.updateOne(
+                        { roomcode: roomCode },
+                        {
+                            winner: opponentName,
+                            remainingGuesses: room.remainingGuesses,
+                            found: room.found,
+                        }
+                    );
+        
+                    // Emit game status to all players
                     io.to(roomCode).emit("gameStatus", {
-                        wonBy: activeRooms[roomCode].players[oppPlayerIndex],
-                        lostBy: guess.playerName
+                        [playerName]: {
+                            found: room.found[currentPlayerIndex],
+                            remainingGuesses: room.remainingGuesses[currentPlayerIndex],
+                            won: false,
+                            lost: true,
+                        },
+                        [opponentName]: {
+                            found: room.found[oppPlayerIndex],
+                            remainingGuesses: room.remainingGuesses[oppPlayerIndex],
+                            won: true,
+                            lost: false,
+                        },
                     });
-                    await GameRoom.updateOne({roomCode: roomCode}, {winner: activeRooms[roomCode].players[oppPlayerIndex], remainingGuesses: room.remainingGuesses,
-                        found: room.found});
-                    return callback({ correctness: false, won: false, lost: true, myFound: room.found[currentPlayerIndex], oppFound : room.found[oppPlayerIndex], myRemaining: room.remainingGuesses[currentPlayerIndex], oppRemaining: room.remainingGuesses[oppPlayerIndex]});
+        
+                    // Return correctness in the callback
+                    return callback({ correctness: false });
                 }
-                callback({ correctness: false, won: false, lost: false, myFound: room.found[currentPlayerIndex], oppFound : room.found[oppPlayerIndex], myRemaining: room.remainingGuesses[currentPlayerIndex], oppRemaining: room.remainingGuesses[oppPlayerIndex]});
+        
+                // Emit updated game state to all players
+                io.to(roomCode).emit("gameStatus", {
+                    [playerName]: {
+                        found: room.found[currentPlayerIndex],
+                        remainingGuesses: room.remainingGuesses[currentPlayerIndex],
+                        won: false,
+                        lost: false,
+                    },
+                    [opponentName]: {
+                        found: room.found[oppPlayerIndex],
+                        remainingGuesses: room.remainingGuesses[oppPlayerIndex],
+                        won: false,
+                        lost: false,
+                    },
+                });
+        
+                // Return correctness in the callback
+                return callback({ correctness: false });
             }
-
-            // Update database
-            await GameRoom.updateOne(
-                { roomcode: roomCode },
-                {
-                    remainingGuesses: room.remainingGuesses,
-                    found: room.found,
-                    winner: room.winner,
-                }
-            );
         });
         socket.on("invalidateRoom", async({ roomCode, playerName}, callback) => {
             console.log(`Invalidating room ${roomCode} as ${playerName} left`);

@@ -66,6 +66,9 @@ exports.addUser = async (req, res) => {
     new_email += "@" + domain;
   }
   console.log(username);
+  const existingUser = await User.findOne({username: username});
+  if(existingUser)
+    return res.status(300).json({message: "User already exists"});
   console.log(req.body);
   const hash = await argon.hash(password);
   const newUser = new User({
