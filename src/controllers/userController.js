@@ -6,6 +6,7 @@ exports.getUser = async (req, res) => {
   const userFound = await User.findOne({ username: username }).select('-passwordHash');
   console.log("user found");
   if (!userFound) return res.status(404).json({ message: "user not found" });
+  console.log(userFound)
   return res.json(userFound);
 };
 
