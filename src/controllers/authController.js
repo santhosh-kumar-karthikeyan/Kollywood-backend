@@ -14,7 +14,7 @@ exports.checkUsername = async (req, res) => {
   try {
     const user = await User.findOne({ username: username });
     if (user) {
-      return res.status(400).json({ exists: true });
+      return res.status(200).json({ exists: true });
     } else {
       return res.status(200).json({ exists: false });
     }
